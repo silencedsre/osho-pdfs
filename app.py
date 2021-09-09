@@ -311,6 +311,7 @@ if __name__ == "__main__":
     pdf_mapping = tuple_to_dict(pdf_list, dictionary)
     Path('data/').mkdir(parents=True, exist_ok=True)
     st.set_page_config(layout="wide")
+    set_page_title("Osho Books")
     value = st.sidebar.selectbox("Select a Book", pdf_name, on_change=callback_delete())
     text = value.split('.')[0].split('_')[1:]
     text = " ".join(text)
