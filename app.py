@@ -311,13 +311,22 @@ if __name__ == "__main__":
     pdf_mapping = tuple_to_dict(pdf_list, dictionary)
     Path('data/').mkdir(parents=True, exist_ok=True)
     st.set_page_config(layout="wide")
-    set_page_title("Osho books")
-    st.title("Osho Books")
     value = st.sidebar.selectbox("Select a Book", pdf_name, on_change=callback_delete())
+    text = value.split('.')[0].split('_')[1:]
+    text = " ".join(text)
+    st.header(f"{text}, Osho")
     time.sleep(0.25)
     if not Path(f'data/{value}').is_file():
         download_file_from_google_drive(pdf_mapping[value], f"data/{value}")
-    time.sleep(0.5)
+    time.sleep(0.25)
     show_pdf(f"data/{value}")
-    st.write(value)
-    temp = value
+
+    hide_streamlit_style = """
+    <style>
+    #MainMenu {visibility: hidden;}
+    footer {visibility: hidden;}
+    </style>
+
+    """
+    st.markdown(hide_streamlit_style, unsafe_allow_html=True)
+    st.markdown("""---""")
