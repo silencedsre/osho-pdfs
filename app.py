@@ -259,7 +259,7 @@ def show_pdf(file_path):
     with open(file_path,"rb") as f:
           base64_pdf = base64.b64encode(f.read()).decode('utf-8')
     # pdf_display = f'<embed src="data:application/pdf;base64,{base64_pdf}" width="1250" height="720" type="application/pdf">'
-    pdf_display = f'<iframe src="data:application/pdf;base64,{base64_pdf}" width="1100" height="1000" type="application/pdf"></iframe>'
+    pdf_display = f'<iframe src="data:application/pdf;base64,{base64_pdf}" width="1350" height="1000" type="application/pdf"></iframe>'
     st.markdown(pdf_display, unsafe_allow_html=True)
 
 # Python code to convert into dictionary
@@ -268,12 +268,17 @@ def tuple_to_dict(tup, di):
     return di
 
 def callback_delete():
-    for f in Path('data/').glob('*.pdf'):
-        try:
-            f.unlink()
-        except OSError as e:
-            print("Error: %s : %s" % (f, e.strerror))
-    time.sleep(1)
+    first_pdf_path = Path("data/001_A_Sudden_Clash_of_Thunder.pdf")
+    first_pdf_path = str(first_pdf_path)
+    all_files = Path('data/').glob('*.pdf')
+    for f in all_files:
+        if str(f) == first_pdf_path:
+            pass
+        else:
+            try:
+                f.unlink()
+            except OSError as e:
+                print("Error: %s : %s" % (f, e.strerror))
 
 def set_page_title(title):
     st.sidebar.markdown(unsafe_allow_html=True, body=f"""
@@ -305,11 +310,14 @@ if __name__ == "__main__":
     pdf_name.reverse()
     pdf_mapping = tuple_to_dict(pdf_list, dictionary)
     Path('data/').mkdir(parents=True, exist_ok=True)
+    st.set_page_config(layout="wide")
     set_page_title("Osho books")
     st.title("Osho Books")
-    value = st.sidebar.selectbox("Select a Book", pdf_name, on_change=callback_delete)
+    value = st.sidebar.selectbox("Select a Book", pdf_name, on_change=callback_delete())
+    time.sleep(0.25)
     if not Path(f'data/{value}').is_file():
         download_file_from_google_drive(pdf_mapping[value], f"data/{value}")
-    time.sleep(2)
+    time.sleep(0.5)
     show_pdf(f"data/{value}")
     st.write(value)
+    temp = value
